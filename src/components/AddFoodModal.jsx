@@ -1,38 +1,38 @@
+import { useState } from "react";
 import { View, StyleSheet, Modal, Text, TextInput } from "react-native";
 import { Button, Icon } from "@rneui/base";
-import { Input } from "@rneui/themed";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, ErrorMessage } from "formik";
 
 const AddFoodModal = ({ visible, closeModal }) => {
-  // const validar = (values) => {
-  //   const errors = {};
+  const [habilitar, setHabilitar] = useState(false);
 
-  //   if (!values.kcal) {
-  //     errors.kcal = "Please enter kcal";
-  //   }
-  //   if (!values.name) {
-  //     errors.name = "Please enter Name";
-  //   }
-  //   if (!values.portion) {
-  //     errors.portion = "Please enter Portion";
-  //   }
-  //   // if(!errors.type_user){
-  //   //     setHabilitar(true)
-  //   //     }
-  //   //  if(errors.type_user){
-  //   //     setHabilitar(false)
-  //   //     }
-  //   return errors;
-  // };
+  const validar = (values) => {
+    const errors = {};
+
+    if (!values.kcal) {
+      errors.kcal = "Please enter calories";
+    }
+    if (!values.name) {
+      errors.name = "Please enter Name";
+    }
+    if (!values.portion) {
+      errors.portion = "Please enter Portion";
+    }
+    if (Object.keys(errors).length === 0) {
+      setHabilitar(true);
+    } else {
+      setHabilitar(false);
+    }
+    return errors;
+  };
 
   const handleSubmit = (values) => {
-    console.log("Values", values);
-    // const modalInput = {
-    //   kcal: values.kcal,
-    //   name: values.name,
-    //   portion: values.portion,
-    // };
-    // console.log(modalInput);
+    const modalInput = {
+      kcal: values.kcal,
+      name: values.name,
+      portion: values.portion,
+    };
+    console.log(modalInput);
   };
 
   return (
@@ -49,10 +49,9 @@ const AddFoodModal = ({ visible, closeModal }) => {
           portion: "",
         }}
         onSubmit={handleSubmit}
-        // validate={validar}
+        validate={validar}
       >
-       {({ handleChange, handleBlur, handleSubmit, values }) => (  
-       
+        {({ handleChange, handleBlur, handleSubmit, values }) => (
           <View style={Styles.container}>
             <View style={Styles.content}>
               <View style={Styles.closeContainer}>
@@ -68,46 +67,67 @@ const AddFoodModal = ({ visible, closeModal }) => {
               <View style={Styles.formItem}>
                 <View style={Styles.inputContainer}>
                   <TextInput
-                   placeholder="Enter Calories"
-                   onChangeText={handleChange('kcal')}
-                   onBlur={handleBlur('kcal')}
-                   value={values.kcal}
-                   style={Styles.textInput}
-                   />
+                    placeholder="Enter Calories"
+                    onChangeText={handleChange("kcal")}
+                    onBlur={handleBlur("kcal")}
+                    value={values.kcal}
+                    style={Styles.textInput}
+                  />
                 </View>
                 <View style={Styles.legendContainer}>
                   <Text style={Styles.legend}>Kcal.</Text>
                 </View>
               </View>
-
-              <View style={Styles.formItem}>
-                <View style={Styles.inputContainer}>
-                  <TextInput
-                   placeholder="Enter Name"
-                   onChangeText={handleChange('name')}
-                   onBlur={handleBlur('name')}
-                   value={values.name}
-                   style={Styles.textInput}
-                   />
-                </View>
-                <View style={Styles.legendContainer}>
-                  <Text style={Styles.legend}>Name</Text>
-                </View>
+              <View style={Styles.errorContainer}>
+                <ErrorMessage
+                  style={Styles.errorText}
+                  name="kcal"
+                  component={Text}
+                />
               </View>
 
               <View style={Styles.formItem}>
                 <View style={Styles.inputContainer}>
                   <TextInput
-                   placeholder="Enter Portion"
-                   onChangeText={handleChange('portion')}
-                   onBlur={handleBlur('portion')}
-                   value={values.portion}
-                   style={Styles.textInput}
-                   />
+                    placeholder="Enter Name"
+                    onChangeText={handleChange("name")}
+                    onBlur={handleBlur("name")}
+                    value={values.name}
+                    style={Styles.textInput}
+                  />
+                </View>
+                <View style={Styles.legendContainer}>
+                  <Text style={Styles.legend}>Name</Text>
+                </View>
+              </View>
+              <View style={Styles.errorContainer}>
+                <ErrorMessage
+                  style={Styles.errorText}
+                  name="name"
+                  component={Text}
+                />
+              </View>
+
+              <View style={Styles.formItem}>
+                <View style={Styles.inputContainer}>
+                  <TextInput
+                    placeholder="Enter Portion"
+                    onChangeText={handleChange("portion")}
+                    onBlur={handleBlur("portion")}
+                    value={values.portion}
+                    style={Styles.textInput}
+                  />
                 </View>
                 <View style={Styles.legendContainer}>
                   <Text style={Styles.legend}>Portion</Text>
                 </View>
+              </View>
+              <View style={Styles.errorContainer}>
+                <ErrorMessage
+                  style={Styles.errorText}
+                  name="portion"
+                  component={Text}
+                />
               </View>
 
               <View style={Styles.buttonContainer}>
@@ -117,11 +137,12 @@ const AddFoodModal = ({ visible, closeModal }) => {
                   radius={"lg"}
                   color="#4ecb71"
                   onPress={handleSubmit}
+                  disabled={habilitar === false}
                 />
               </View>
             </View>
           </View>
-       )}
+        )}
       </Formik>
     </Modal>
   );
@@ -168,11 +189,16 @@ const Styles = StyleSheet.create({
   buttonContainer: {
     alignItems: "flex-end",
   },
-  textInput:{
-    borderBottomColor: 'grey', // Set your desired underline color
-    borderBottomWidth: 0.2, // Set the thickness of the underline
-    // Add other styles as needed
-
-  }
+  textInput: {
+    borderBottomColor: "grey",
+    borderBottomWidth: 0.2,
+  },
+  errorContainer: {
+    paddingLeft: 12,
+  },
+  errorText: {
+    fontSize: 12,
+    color: "red",
+  },
 });
 export default AddFoodModal;
