@@ -1,19 +1,48 @@
-import { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { useState, useEffect } from "react";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import Header from "../components/Header";
 import AddFoodModal from "../components/AddFoodModal";
+import MealItem from "../components/MealItem";
 import { Button, Icon } from "@rneui/base";
 import { Input } from "@rneui/themed";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AddFood = () => {
   const [visible, setVisible] = useState(false);
+  const [foods, setFoods] = useState([]);
 
   const openModal = () => {
     setVisible(true);
   };
   const closeModal = () => {
     setVisible(false);
+    refreshData();
   };
+
+  const refreshData = async () => {
+    try {
+      const foodsData = await AsyncStorage.getItem("Foods");
+      const parsedFoods = JSON.parse(foodsData) || [];
+      setFoods(parsedFoods);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchFoods = async () => {
+      try {
+        const foodsData = await AsyncStorage.getItem("Foods");
+        const parsedFoods = JSON.parse(foodsData) || []; // Handle case when AsyncStorage returns null
+        setFoods(parsedFoods);
+        console.log("FOODS IN LOCAL STORAGE", parsedFoods);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+  
+    fetchFoods();
+  }, []);
 
   return (
     <View style={Styles.container}>
@@ -45,6 +74,9 @@ const AddFood = () => {
           ></Button>
         </View>
       </View>
+      <ScrollView style={Styles.scroll}> 
+        {foods?.map((meal, index) => <MealItem key={index} meal={meal}/>)}
+      </ScrollView>
       <AddFoodModal visible={visible} closeModal={closeModal} />
     </View>
   );
@@ -54,7 +86,7 @@ const Styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 12,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#FFF",
   },
   up: {
     flexDirection: "row",
@@ -88,6 +120,10 @@ const Styles = StyleSheet.create({
   searchBtnTitle: {
     color: "black",
     fontSize: 14,
+  },
+  scroll:{
+    
+    flex: 1,
   },
 });
 export default AddFood;
