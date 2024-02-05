@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { View, StyleSheet, Modal, Text, TextInput } from "react-native";
 import { Button, Icon } from "@rneui/base";
 import { Formik, ErrorMessage } from "formik";

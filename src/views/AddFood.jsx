@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TextInput } from "react-native";
 import Header from "../components/Header";
 import AddFoodModal from "../components/AddFoodModal";
 import MealItem from "../components/MealItem";
 import { Button, Icon } from "@rneui/base";
 import { Input } from "@rneui/themed";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Formik, ErrorMessage } from "formik";
 
 const AddFood = () => {
   const [visible, setVisible] = useState(false);
   const [foods, setFoods] = useState([]);
+  const [searchFoods, setSearchFoods] = useState("");
 
   const openModal = () => {
     setVisible(true);
@@ -35,14 +37,25 @@ const AddFood = () => {
         const foodsData = await AsyncStorage.getItem("Foods");
         const parsedFoods = JSON.parse(foodsData) || []; // Handle case when AsyncStorage returns null
         setFoods(parsedFoods);
-        console.log("FOODS IN LOCAL STORAGE", parsedFoods);
+        // console.log("FOODS IN LOCAL STORAGE", parsedFoods);
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
     };
-  
+
     fetchFoods();
   }, []);
+
+  const handleSearch = async (values) => {
+    console.log("SEARCH VALUES", values);
+    try {
+      const foodsData = await AsyncStorage.getItem("Foods");
+      setSearchFoods(foodsData.filter((item) => item.name.includes(search)));
+      console.log("SEARCH VALUES", searchFoods);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <View style={Styles.container}>
@@ -61,21 +74,41 @@ const AddFood = () => {
           ></Button>
         </View>
       </View>
-      <View style={Styles.down}>
-        <View style={Styles.leftDown}>
-          <Input placeholder="apples, pies, soda" />
-        </View>
-        <View style={Styles.rightDown}>
-          <Button
-            title="Search"
-            radius={"lg"}
-            color="#ade8af"
-            titleStyle={Styles.searchBtnTitle}
-          ></Button>
-        </View>
-      </View>
-      <ScrollView style={Styles.scroll}> 
-        {foods?.map((meal, index) => <MealItem key={index} meal={meal}/>)}
+
+      <Formik
+        initialValues={{
+          search: "",
+        }}
+        onSubmit={(values) => handleSearch(values)}
+      >
+        {({ handleChange, handleBlur, handleSubmit, values }) => (
+          <View style={Styles.down}>
+            <View style={Styles.leftDown}>
+              <TextInput
+                placeholder="beer, apple, pies, soda"
+                onChangeText={handleChange("search")}
+                onBlur={handleBlur("search")}
+                value={values.search}
+                style={Styles.textInput}
+              />
+            </View>
+            <View style={Styles.rightDown}>
+              <Button
+                title="Search"
+                radius={"lg"}
+                color="#ade8af"
+                titleStyle={Styles.searchBtnTitle}
+                onPress={handleSubmit}
+              ></Button>
+            </View>
+          </View>
+        )}
+      </Formik>
+
+      <ScrollView style={Styles.scroll}>
+        {foods?.map((meal, index) => (
+          <MealItem key={index} meal={meal} />
+        ))}
       </ScrollView>
       <AddFoodModal visible={visible} closeModal={closeModal} />
     </View>
@@ -110,20 +143,28 @@ const Styles = StyleSheet.create({
     marginVertical: 24,
   },
   leftDown: {
-    flex: 1,
-    marginLeft: -12,
+    fontSize: 20,
+    flex: 0.7,
+    marginLeft: 5,
   },
   rightDown: {
-    flex: 1,
+    flex: 0.3,
     alignItems: "flex-end",
   },
   searchBtnTitle: {
     color: "black",
     fontSize: 14,
   },
-  scroll:{
-    
+  scroll: {
     flex: 1,
+  },
+  inputContainer: {
+    flex: 2,
+  },
+  textInput: {
+    fontSize: 28,
+    borderBottomColor: "grey",
+    borderBottomWidth: 0.2,
   },
 });
 export default AddFood;
