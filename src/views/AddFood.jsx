@@ -11,7 +11,7 @@ import { Formik, ErrorMessage } from "formik";
 const AddFood = () => {
   const [visible, setVisible] = useState(false);
   const [foods, setFoods] = useState([]);
-  const [searchFoods, setSearchFoods] = useState("");
+  const [searchFoods, setSearchFoods] = useState();
 
   const openModal = () => {
     setVisible(true);
@@ -30,6 +30,7 @@ const AddFood = () => {
       console.error("Error fetching data: ", error);
     }
   };
+  console.log("Filtro", searchFoods);
 
   useEffect(() => {
     const fetchFoods = async () => {
@@ -47,11 +48,13 @@ const AddFood = () => {
   }, []);
 
   const handleSearch = async (values) => {
-    console.log("SEARCH VALUES", values);
     try {
-      const foodsData = await AsyncStorage.getItem("Foods");
-      setSearchFoods(foodsData.filter((item) => item.name.includes(search)));
-      console.log("SEARCH VALUES", searchFoods);
+      const foodsData = JSON.parse(await AsyncStorage.getItem("Foods"));
+      if (foodsData !== undefined) {
+        setSearchFoods(
+          foodsData.filter((item) => item.name.includes(values.search))
+        );
+      }
     } catch (error) {
       console.log(error);
     }
@@ -86,7 +89,10 @@ const AddFood = () => {
             <View style={Styles.leftDown}>
               <TextInput
                 placeholder="beer, apple, pies, soda"
-                onChangeText={handleChange("search")}
+                onChangeText={(text) => {
+                  handleChange("search")(text);
+                  handleSearch({ search: text });
+                }}
                 onBlur={handleBlur("search")}
                 value={values.search}
                 style={Styles.textInput}
@@ -106,9 +112,11 @@ const AddFood = () => {
       </Formik>
 
       <ScrollView style={Styles.scroll}>
-        {foods?.map((meal, index) => (
-          <MealItem key={index} meal={meal} />
-        ))}
+        {searchFoods
+          ? searchFoods?.map((meal, index) => (
+              <MealItem key={index} meal={meal} />
+            ))
+          : foods?.map((meal, index) => <MealItem key={index} meal={meal} />)}
       </ScrollView>
       <AddFoodModal visible={visible} closeModal={closeModal} />
     </View>
