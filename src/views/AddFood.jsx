@@ -1,63 +1,64 @@
-import { useState, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, TextInput } from "react-native";
-import Header from "../components/Header";
-import AddFoodModal from "../components/AddFoodModal";
-import MealItem from "../components/MealItem";
 import { Button, Icon } from "@rneui/base";
-import { Input } from "@rneui/themed";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Formik, ErrorMessage } from "formik";
+import { Formik } from "formik";
+
+import AddFoodModal from "../components/AddFoodModal";
+import Header from "../components/Header";
+import MealItem from "../components/MealItem";
+import { getFoodsContext } from "../context/GetFoodsContext";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AddFood = () => {
+  // useEffect(() => {
+
+  //   const removeAllItems = async () => {
+  //     try {
+  //       // Get all keys from AsyncStorage
+  //       const keys = await AsyncStorage.getAllKeys();
+
+  //       // Remove all items corresponding to the keys
+  //       await AsyncStorage.multiRemove(keys);
+
+  //       console.log('All items removed successfully.');
+  //     } catch (error) {
+  //       console.error('Error removing items:', error);
+  //     }
+  //   };
+
+  //   // Call the function to remove all items
+  //   removeAllItems();
+  // }, []);
+
+  const { getFoods } = useContext(getFoodsContext);
   const [visible, setVisible] = useState(false);
   const [foods, setFoods] = useState([]);
   const [searchFoods, setSearchFoods] = useState();
+
+  console.log("GETFOODS", getFoods);
 
   const openModal = () => {
     setVisible(true);
   };
   const closeModal = () => {
     setVisible(false);
-    refreshData();
+    // refreshData();
   };
 
-  const refreshData = async () => {
-    try {
-      const foodsData = await AsyncStorage.getItem("Foods");
-      const parsedFoods = JSON.parse(foodsData) || [];
-      setFoods(parsedFoods);
-    } catch (error) {
-      console.error("Error fetching data: ", error);
-    }
-  };
-  console.log("Filtro", searchFoods);
+  // const refreshData = async () => {
+  //   try {
+  //     const foodsData = await AsyncStorage.getItem("Foods");
+  //     const parsedFoods = JSON.parse(foodsData) || [];
+  //     setFoods(parsedFoods);
+  //   } catch (error) {
+  //     console.error("Error fetching data: ", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    const fetchFoods = async () => {
-      try {
-        const foodsData = await AsyncStorage.getItem("Foods");
-        const parsedFoods = JSON.parse(foodsData) || []; // Handle case when AsyncStorage returns null
-        setFoods(parsedFoods);
-        // console.log("FOODS IN LOCAL STORAGE", parsedFoods);
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      }
-    };
-
-    fetchFoods();
-  }, []);
-
-  const handleSearch = async (values) => {
-    try {
-      const foodsData = JSON.parse(await AsyncStorage.getItem("Foods"));
-      if (foodsData !== undefined) {
-        setSearchFoods(
-          foodsData.filter((item) => item.name.includes(values.search))
-        );
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  const handleSearch = (values) => {
+    setSearchFoods(
+      getFoods.filter((item) => item.name.includes(values.search))
+    );
   };
 
   return (
@@ -116,8 +117,9 @@ const AddFood = () => {
           ? searchFoods?.map((meal, index) => (
               <MealItem key={index} meal={meal} />
             ))
-          : foods?.map((meal, index) => <MealItem key={index} meal={meal} />)}
+          : getFoods?.map((food, index) => <MealItem key={index} food={food} />)}
       </ScrollView>
+
       <AddFoodModal visible={visible} closeModal={closeModal} />
     </View>
   );

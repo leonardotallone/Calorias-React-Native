@@ -1,12 +1,16 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import Header from "../components/Header";
 import SubHeader from "../components/SubHeader";
+import TodayCalories from "../components/TodayCalories";
+import TodayMeals from "../components/TodayMeals";
 
 const Home = () => {
   return (
     <View style={Styles.container}>
       <Header />
       <SubHeader />
+      <TodayCalories />
+      <TodayMeals />
     </View>
   );
 };

@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { View, StyleSheet, Modal, Text, TextInput } from "react-native";
 import { Button, Icon } from "@rneui/base";
 import { Formik, ErrorMessage } from "formik";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Alert } from "react-native";
-
+import { saveFoodsContext } from "../context/SaveFoodsCoxtext";
 
 const AddFoodModal = ({ visible, closeModal }) => {
+  
+  const { setSaveFoods } = useContext(saveFoodsContext);
+
   const [habilitar, setHabilitar] = useState(false);
 
   const validar = (values) => {
@@ -29,30 +30,14 @@ const AddFoodModal = ({ visible, closeModal }) => {
     return errors;
   };
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = (values) => {
     const modalInput = {
       kcal: values.kcal,
       name: values.name,
       portion: values.portion,
     };
-    // Retrieve existing foods array from AsyncStorage
-    try {
-      const existingFoods = await AsyncStorage.getItem("Foods");
-      let foodsArray = existingFoods ? JSON.parse(existingFoods) : [];
-
-      // Add the new food object to the array
-      foodsArray.push(modalInput);
-
-      // Store the updated array back in AsyncStorage
-      await AsyncStorage.setItem("Foods", JSON.stringify(foodsArray));
-
-      Alert.alert("Food saved successfully", "Thanks!");
-    } catch (error) {
-      console.error("Error saving data: ", error);
-    }
+    setSaveFoods(modalInput);
   };
-
-
 
   return (
     <Modal

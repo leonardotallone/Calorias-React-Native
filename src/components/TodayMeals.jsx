@@ -1,0 +1,93 @@
+import { useState } from "react";
+import { View, StyleSheet, ScrollView, Text } from "react-native";
+import MealItem from "../components/MealItem";
+
+
+const TodayMeals = () => {
+  const [foods, setFoods] = useState([]);
+
+  // useEffect(() => {
+  //   const fetchFoods = async () => {
+  //     try {
+  //       const foodsData = await AsyncStorage.getItem("Foods");
+  //       const parsedFoods = JSON.parse(foodsData) || []; // Handle case when AsyncStorage returns null
+  //       setFoods(parsedFoods);
+  //     } catch (error) {
+  //       console.error("Error fetching data: ", error);
+  //     }
+  //   };
+
+  //   fetchFoods();
+  // }, []);
+
+  return (
+    <View style={Styles.container}>
+      <ScrollView style={Styles.scroll}>
+        {foods === undefined
+          ? foods.map((food, index) => <MealItem key={index} food={food} />)
+          : 
+          <Text style={Styles.nothing}>
+           No food of the day to show
+          </Text>
+          }
+      </ScrollView>
+    </View>
+  );
+};
+export default TodayMeals;
+
+const Styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 12,
+    backgroundColor: "#FFF",
+  },
+  up: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 24,
+  },
+  leftUp: {
+    flex: 1,
+  },
+  rightUp: {
+    flex: 1,
+    alignItems: "flex-end",
+  },
+  addFoodText: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  down: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 24,
+  },
+  leftDown: {
+    fontSize: 20,
+    flex: 0.7,
+    marginLeft: 5,
+  },
+  rightDown: {
+    flex: 0.3,
+    alignItems: "flex-end",
+  },
+  searchBtnTitle: {
+    color: "black",
+    fontSize: 14,
+  },
+  scroll: {
+    flex: 1,
+  },
+  inputContainer: {
+    flex: 2,
+  },
+  textInput: {
+    fontSize: 28,
+    borderBottomColor: "grey",
+    borderBottomWidth: 0.2,
+  },
+  nothing:{
+    fontSize: 14,
+  }
+});

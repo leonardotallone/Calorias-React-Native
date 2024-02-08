@@ -1,13 +1,17 @@
-// import { StatusBar } from "expo-status-bar";
 import { StyleSheet, SafeAreaView } from "react-native";
 import Routes from "./Routes";
+import SaveFoodsProvider from "./src/context/SaveFoodsCoxtext";
+import GetFoodsProvider from "./src/context/GetFoodsContext";
 
 export default function App() {
   return (
-    <SafeAreaView style={styles.container}>
-      {/* <StatusBar style="auto" /> */}
-      <Routes />
-    </SafeAreaView>
+    <GetFoodsProvider>
+    <SaveFoodsProvider>
+      <SafeAreaView style={styles.container}>
+        <Routes />
+      </SafeAreaView>
+    </SaveFoodsProvider>
+    </GetFoodsProvider>
   );
 }
 
