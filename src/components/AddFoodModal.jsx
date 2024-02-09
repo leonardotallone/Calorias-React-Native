@@ -7,7 +7,6 @@ import { saveFoodsContext } from "../context/SaveFoodsCoxtext";
 const AddFoodModal = ({ visible, closeModal }) => {
   
   const { setSaveFoods } = useContext(saveFoodsContext);
-
   const [habilitar, setHabilitar] = useState(false);
 
   const validar = (values) => {

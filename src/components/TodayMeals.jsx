@@ -1,35 +1,19 @@
-import { useState } from "react";
+import { useContext } from "react";
 import { View, StyleSheet, ScrollView, Text } from "react-native";
-import MealItem from "../components/MealItem";
-
+import MealOfDayItems from "../components/MealOfDayItems";
+import { foodsOfDayContext } from "../context/FoodsOfDayContext";
 
 const TodayMeals = () => {
-  const [foods, setFoods] = useState([]);
-
-  // useEffect(() => {
-  //   const fetchFoods = async () => {
-  //     try {
-  //       const foodsData = await AsyncStorage.getItem("Foods");
-  //       const parsedFoods = JSON.parse(foodsData) || []; // Handle case when AsyncStorage returns null
-  //       setFoods(parsedFoods);
-  //     } catch (error) {
-  //       console.error("Error fetching data: ", error);
-  //     }
-  //   };
-
-  //   fetchFoods();
-  // }, []);
+  const { foodsOfDay } = useContext(foodsOfDayContext);
 
   return (
     <View style={Styles.container}>
       <ScrollView style={Styles.scroll}>
-        {foods === undefined
-          ? foods.map((food, index) => <MealItem key={index} food={food} />)
-          : 
-          <Text style={Styles.nothing}>
-           No food of the day to show
-          </Text>
-          }
+        {foodsOfDay !== undefined ? (
+          foodsOfDay.map((foodOfDay, index) => <MealOfDayItems key={index} foodOfDay={foodOfDay} />)
+        ) : (
+          <Text style={Styles.nothing}>No food of the day to show</Text>
+        )}
       </ScrollView>
     </View>
   );
@@ -87,7 +71,7 @@ const Styles = StyleSheet.create({
     borderBottomColor: "grey",
     borderBottomWidth: 0.2,
   },
-  nothing:{
+  nothing: {
     fontSize: 14,
-  }
+  },
 });

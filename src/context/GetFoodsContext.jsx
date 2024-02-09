@@ -16,7 +16,7 @@ const GetFoodsProvider = ({ children }) => {
       }
     };
     getDataFromStorage();
-  }, []);
+  }, [setGetFoods]);
 
   return (
     <getFoodsContext.Provider value={{ getFoods }}>

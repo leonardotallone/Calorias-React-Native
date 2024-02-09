@@ -4,9 +4,10 @@ import { Alert } from "react-native";
 
 export const saveFoodsContext = createContext();
 
+
 const SaveFoodsProvider = ({ children }) => {
   const [saveFoods, setSaveFoods] = useState();
- 
+
   useEffect(() => {
     const saveDataToStorage = async () => {
       if (saveFoods) {

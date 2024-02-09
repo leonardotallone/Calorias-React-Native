@@ -7,7 +7,7 @@ import AddFoodModal from "../components/AddFoodModal";
 import Header from "../components/Header";
 import MealItem from "../components/MealItem";
 import { getFoodsContext } from "../context/GetFoodsContext";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AddFood = () => {
   // useEffect(() => {
@@ -32,28 +32,14 @@ const AddFood = () => {
 
   const { getFoods } = useContext(getFoodsContext);
   const [visible, setVisible] = useState(false);
-  const [foods, setFoods] = useState([]);
   const [searchFoods, setSearchFoods] = useState();
-
-  console.log("GETFOODS", getFoods);
 
   const openModal = () => {
     setVisible(true);
   };
   const closeModal = () => {
     setVisible(false);
-    // refreshData();
   };
-
-  // const refreshData = async () => {
-  //   try {
-  //     const foodsData = await AsyncStorage.getItem("Foods");
-  //     const parsedFoods = JSON.parse(foodsData) || [];
-  //     setFoods(parsedFoods);
-  //   } catch (error) {
-  //     console.error("Error fetching data: ", error);
-  //   }
-  // };
 
   const handleSearch = (values) => {
     setSearchFoods(
@@ -117,9 +103,10 @@ const AddFood = () => {
           ? searchFoods?.map((meal, index) => (
               <MealItem key={index} meal={meal} />
             ))
-          : getFoods?.map((food, index) => <MealItem key={index} food={food} />)}
+          : getFoods?.map((food, index) => (
+              <MealItem key={index} food={food} />
+            ))}
       </ScrollView>
-
       <AddFoodModal visible={visible} closeModal={closeModal} />
     </View>
   );

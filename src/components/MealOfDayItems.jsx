@@ -3,23 +3,24 @@ import { View, Text, StyleSheet } from "react-native";
 import { Button, Icon } from "@rneui/base";
 import { foodsOfDayContext } from "../context/FoodsOfDayContext";
 
-const MealItem = ({ food }) => {
-  
-  const {setFoodOfDay} = useContext(foodsOfDayContext)
+const MealOfDayItems = ({ foodOfDay }) => {
 
-  // const handleSaveFoodOfDay = () => {};
+  const { setRemoveFoodOfDay } = useContext(foodsOfDayContext);
+  
+
+  // const handleRemoveFoodOfDay = () => {};
 
   return (
     <View style={Styles.container}>
       <View style={Styles.leftContainer}>
-        <Text style={Styles.name}>{food.name}</Text>
-        <Text style={Styles.portion}>{food.portion}</Text>
+        <Text style={Styles.name}>{foodOfDay.name}</Text>
+        <Text style={Styles.portion}>{foodOfDay.portion}</Text>
       </View>
       <View style={Styles.rightContainer}>
         <Button
           icon={
             <Icon
-              name="add-circle-outline"
+              name="close"
               color="black"
               style={Styles.iconButton}
             />
@@ -27,9 +28,9 @@ const MealItem = ({ food }) => {
           radius={"lg"}
           color="#4ecb71"
           type="clear"
-          // onPress={handleSaveFoodOfDay}
+          // onPress={handleRemoveFoodOfDay}
         ></Button>
-        <Text style={Styles.calories}>{food.kcal} cal</Text>
+        <Text style={Styles.calories}>{foodOfDay.kcal} cal</Text>
       </View>
     </View>
   );
@@ -69,4 +70,4 @@ const Styles = StyleSheet.create({
     marginBottom: -1,
   },
 });
-export default MealItem;
+export default MealOfDayItems;
