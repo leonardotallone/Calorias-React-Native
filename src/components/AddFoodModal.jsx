@@ -3,10 +3,11 @@ import { View, StyleSheet, Modal, Text, TextInput } from "react-native";
 import { Button, Icon } from "@rneui/base";
 import { Formik, ErrorMessage } from "formik";
 import { saveFoodsContext } from "../context/SaveFoodsCoxtext";
+import { getFoodsContext } from "../context/GetFoodsContext";
 
 const AddFoodModal = ({ visible, closeModal }) => {
-  
   const { setSaveFoods } = useContext(saveFoodsContext);
+  // const { refreshData } = useContext(getFoodsContext);
   const [habilitar, setHabilitar] = useState(false);
 
   const validar = (values) => {
@@ -36,6 +37,7 @@ const AddFoodModal = ({ visible, closeModal }) => {
       portion: values.portion,
     };
     setSaveFoods(modalInput);
+    
   };
 
   return (

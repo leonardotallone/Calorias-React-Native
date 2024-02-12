@@ -1,12 +1,13 @@
-import { useState, createContext, useEffect } from "react";
+import { useState, createContext, useEffect} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const getFoodsContext = createContext();
 
 const GetFoodsProvider = ({ children }) => {
-  const [getFoods, setGetFoods] = useState();
-
+  const [getFoods, setGetFoods] = useState([]);
+ 
   useEffect(() => {
+    if (getFoods) {
     const getDataFromStorage = async () => {
       try {
         const existingFoods = await AsyncStorage.getItem("Foods");
@@ -16,7 +17,9 @@ const GetFoodsProvider = ({ children }) => {
       }
     };
     getDataFromStorage();
-  }, [setGetFoods]);
+  }
+    
+  }, []);
 
   return (
     <getFoodsContext.Provider value={{ getFoods }}>

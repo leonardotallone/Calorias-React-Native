@@ -1,13 +1,12 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { View, Text, StyleSheet, ScrollView, TextInput } from "react-native";
 import { Button, Icon } from "@rneui/base";
 import { Formik } from "formik";
+import { getFoodsContext } from "../context/GetFoodsContext";
 
 import AddFoodModal from "../components/AddFoodModal";
 import Header from "../components/Header";
 import MealItem from "../components/MealItem";
-import { getFoodsContext } from "../context/GetFoodsContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AddFood = () => {
   // useEffect(() => {
@@ -32,7 +31,7 @@ const AddFood = () => {
 
   const { getFoods } = useContext(getFoodsContext);
   const [visible, setVisible] = useState(false);
-  const [searchFoods, setSearchFoods] = useState();
+  const [searchItems, setSearchItems] = useState("");
 
   const openModal = () => {
     setVisible(true);
@@ -42,7 +41,7 @@ const AddFood = () => {
   };
 
   const handleSearch = (values) => {
-    setSearchFoods(
+    setSearchItems(
       getFoods.filter((item) => item.name.includes(values.search))
     );
   };
@@ -97,15 +96,8 @@ const AddFood = () => {
           </View>
         )}
       </Formik>
-
       <ScrollView style={Styles.scroll}>
-        {searchFoods
-          ? searchFoods?.map((meal, index) => (
-              <MealItem key={index} meal={meal} />
-            ))
-          : getFoods?.map((food, index) => (
-              <MealItem key={index} food={food} />
-            ))}
+        <MealItem searchItems={searchItems} />
       </ScrollView>
       <AddFoodModal visible={visible} closeModal={closeModal} />
     </View>
@@ -162,6 +154,9 @@ const Styles = StyleSheet.create({
     fontSize: 28,
     borderBottomColor: "grey",
     borderBottomWidth: 0.2,
+  },
+  nothing: {
+    fontSize: 14,
   },
 });
 export default AddFood;

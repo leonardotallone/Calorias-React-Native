@@ -8,6 +8,8 @@ const FoodsOfDayProvider = ({ children }) => {
   const [foodOfDay, setFoodOfDay] = useState();
   const [removeFoodOfDay, setRemoveFoodOfDay] = useState();
 
+  // console.log("FoodofDay CONTEXT", foodOfDay)
+
   useEffect(() => {
     const saveDataToStorage = async () => {
       if (foodOfDay) {

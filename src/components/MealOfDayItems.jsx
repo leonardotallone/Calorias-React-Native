@@ -1,38 +1,50 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Button, Icon } from "@rneui/base";
+import { getFoodsOfDayContext } from "../context/GetFoodsOfDayContext";
 import { foodsOfDayContext } from "../context/FoodsOfDayContext";
 
-const MealOfDayItems = ({ foodOfDay }) => {
-
+const MealOfDayItems = () => {
+  const { getFoodsOfDays } = useContext(getFoodsOfDayContext);
   const { setRemoveFoodOfDay } = useContext(foodsOfDayContext);
-  
 
-  // const handleRemoveFoodOfDay = () => {};
+  // const handleRemoveFoodOfDay = (foodOfDay) => {
+  //   const selectedFood = {
+  //     calories: foodOfDay.calories,
+  //     name: foodOfDay.name,
+  //     kcal: foodOfDay.kcal,
+  //   };
+  //   setRemoveFoodOfDay(selectedFood)
+    
+  // };
 
   return (
-    <View style={Styles.container}>
-      <View style={Styles.leftContainer}>
-        <Text style={Styles.name}>{foodOfDay.name}</Text>
-        <Text style={Styles.portion}>{foodOfDay.portion}</Text>
-      </View>
-      <View style={Styles.rightContainer}>
-        <Button
-          icon={
-            <Icon
-              name="close"
-              color="black"
-              style={Styles.iconButton}
-            />
-          }
-          radius={"lg"}
-          color="#4ecb71"
-          type="clear"
-          // onPress={handleRemoveFoodOfDay}
-        ></Button>
-        <Text style={Styles.calories}>{foodOfDay.kcal} cal</Text>
-      </View>
-    </View>
+    <>
+      {getFoodsOfDays ? (
+        getFoodsOfDays.map((foodOfDay, index) => (
+          <View style={Styles.container} key={index}>
+            <View style={Styles.leftContainer}>
+              <Text style={Styles.name}>{foodOfDay.name}</Text>
+              <Text style={Styles.portion}>{foodOfDay.portion}</Text>
+            </View>
+            <View style={Styles.rightContainer}>
+              <Button
+                icon={
+                  <Icon name="close" color="black" style={Styles.iconButton} />
+                }
+                radius={"lg"}
+                color="#4ecb71"
+                type="clear"
+                // onPress={handleRemoveFoodOfDay(foodOfDay)}
+              ></Button>
+              <Text style={Styles.calories}>{foodOfDay.kcal} cal</Text>
+            </View>
+          </View>
+        ))
+      ) : (
+        <Text style={Styles.nothing}>No food of the day to show</Text>
+      )}
+    </>
   );
 };
 
@@ -69,5 +81,9 @@ const Styles = StyleSheet.create({
   iconButton: {
     marginBottom: -1,
   },
+  nothing: {
+    fontSize: 14,
+  },
 });
+
 export default MealOfDayItems;
