@@ -1,8 +1,9 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect} from "react";
 import { View, Text, StyleSheet, ScrollView, TextInput } from "react-native";
 import { Button, Icon } from "@rneui/base";
 import { Formik } from "formik";
 import { getFoodsContext } from "../context/GetFoodsContext";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import AddFoodModal from "../components/AddFoodModal";
 import Header from "../components/Header";

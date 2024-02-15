@@ -5,18 +5,25 @@ import { foodsOfDayContext } from "../context/FoodsOfDayContext";
 import { getFoodsContext } from "../context/GetFoodsContext";
 
 const MealItem = ({ searchItems }) => {
-  const { foodOfDay, setFoodOfDay } = useContext(foodsOfDayContext);
   const { getFoods } = useContext(getFoodsContext);
+  const { setFoodOfDay } = useContext(foodsOfDayContext);
+
+  // Get the current date
+  const currentDate = new Date();
+
+  const formattedDate = `${currentDate.getFullYear()}-${
+    currentDate.getMonth() + 1
+  }-${currentDate.getDate()}`;
 
   const handleSaveFoodOfDay = (food) => {
     const selectedFood = {
-      calories: food.calories,
-      name: food.name,
       kcal: food.kcal,
+      name: food.name,
+      portion: food.portion,
+      date: formattedDate,
     };
     setFoodOfDay(selectedFood);
   };
- 
 
   const renderFoodItem = (food, index) => (
     <View style={Styles.container} key={index}>
@@ -26,7 +33,13 @@ const MealItem = ({ searchItems }) => {
       </View>
       <View style={Styles.rightContainer}>
         <Button
-          icon={<Icon name="add-circle-outline" color="black" style={Styles.iconButton} />}
+          icon={
+            <Icon
+              name="add-circle-outline"
+              color="black"
+              style={Styles.iconButton}
+            />
+          }
           radius={"lg"}
           color="#4ecb71"
           type="clear"
@@ -41,7 +54,9 @@ const MealItem = ({ searchItems }) => {
     <>
       {getFoods ? (
         <>
-          {searchItems ? searchItems.map(renderFoodItem) : getFoods.map(renderFoodItem)}
+          {searchItems
+            ? searchItems.map(renderFoodItem)
+            : getFoods.map(renderFoodItem)}
         </>
       ) : (
         <Text style={Styles.nothing}>No food stored at the moment</Text>

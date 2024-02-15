@@ -8,20 +8,30 @@ const MealOfDayItems = () => {
   const { getFoodsOfDays } = useContext(getFoodsOfDayContext);
   const { setRemoveFoodOfDay } = useContext(foodsOfDayContext);
 
-  // const handleRemoveFoodOfDay = (foodOfDay) => {
-  //   const selectedFood = {
-  //     calories: foodOfDay.calories,
-  //     name: foodOfDay.name,
-  //     kcal: foodOfDay.kcal,
-  //   };
-  //   setRemoveFoodOfDay(selectedFood)
-    
-  // };
+  // Get the current date
+  const currentDate = new Date();
+
+  const formattedDate = `${currentDate.getFullYear()}-${
+    currentDate.getMonth() + 1
+  }-${currentDate.getDate()}`;
+
+  const handleRemoveFoodOfDay = (foodOfDay) => {
+    const selectedFood = {
+      calories: foodOfDay.calories,
+      name: foodOfDay.name,
+      kcal: foodOfDay.kcal,
+    };
+    setRemoveFoodOfDay(selectedFood);
+  };
+
+  const getFoodsOfDaysFiltered = getFoodsOfDays.filter(
+    (food) => food.date === formattedDate
+  );
 
   return (
     <>
-      {getFoodsOfDays ? (
-        getFoodsOfDays.map((foodOfDay, index) => (
+      {getFoodsOfDaysFiltered ? (
+        getFoodsOfDaysFiltered.map((foodOfDay, index) => (
           <View style={Styles.container} key={index}>
             <View style={Styles.leftContainer}>
               <Text style={Styles.name}>{foodOfDay.name}</Text>
@@ -35,7 +45,7 @@ const MealOfDayItems = () => {
                 radius={"lg"}
                 color="#4ecb71"
                 type="clear"
-                // onPress={handleRemoveFoodOfDay(foodOfDay)}
+                onPress={() => handleRemoveFoodOfDay(foodOfDay)}
               ></Button>
               <Text style={Styles.calories}>{foodOfDay.kcal} cal</Text>
             </View>
