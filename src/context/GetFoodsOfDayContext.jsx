@@ -12,7 +12,7 @@ const GetFoodsOfdayProvider = ({ children }) => {
         const existingFoods = await AsyncStorage.getItem("FoodsOfDay");
         setGetFoodsOfDays(JSON.parse(existingFoods) || []);
       } catch (error) {
-        console.error("Error saving data: ", error);
+        console.error("Error saving data:", error);
       }
     };
 
